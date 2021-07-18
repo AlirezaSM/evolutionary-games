@@ -1,7 +1,7 @@
 from player import Player
 import numpy as np
 from config import CONFIG
-from copy import copy
+from copy import deepcopy
 
 
 class Evolution():
@@ -21,6 +21,28 @@ class Evolution():
         pm = 0.05
         mean = 0
         variance = 0.01
+        # for w in child.nn.w:
+        #     num_rows, num_cols = w.shape
+        #     rnd_probs = np.random.uniform(0, 1, size=(num_rows, num_cols))
+        #     gaussian_noises = np.random.normal(mean, variance, size=(num_rows, num_cols))
+        #     for x in range(num_rows):
+        #         for y in range(num_cols):
+        #             if rnd_probs[x, y] < pm:
+        #                 gaussian_noises[x, y] = 0
+        #     w = np.add(w, gaussian_noises)
+        #
+        # for b in child.nn.b:
+        #     num_rows, num_cols = b.shape
+        #     rnd_probs = np.random.uniform(0, 1, size=(num_rows, num_cols))
+        #     gaussian_noises = np.random.normal(mean, variance, size=(num_rows, num_cols))
+        #     for x in range(num_rows):
+        #         for y in range(num_cols):
+        #             if rnd_probs[x, y] < pm:
+        #                 gaussian_noises[x, y] = 0
+        #     b = np.add(b, gaussian_noises)
+
+
+
         for w in child.nn.w:
             num_rows, num_cols = w.shape
             for x in range(num_rows):
@@ -80,7 +102,7 @@ class Evolution():
             for p in prev_players:
                 current += p.fitness / total_fitness
                 while current > rnd_num and step < num_players:
-                    new_players.append(copy(p))
+                    new_players.append(deepcopy(p))
                     step += 1
                     rnd_num += 1 / num_players
 
