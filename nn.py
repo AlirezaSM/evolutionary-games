@@ -7,12 +7,12 @@ class NeuralNetwork():
 
         # TODO
         # layer_sizes example: [4, 10, 2]
-        self.w = [np.random.standard_normal(size=(layer_sizes[1], layer_sizes[0])),
-                  np.random.standard_normal(size=(layer_sizes[2], layer_sizes[1]))]
+        self.w = [np.random.uniform(-1, 1, size=(layer_sizes[1], layer_sizes[0])),
+                  np.random.uniform(-1, 1, size=(layer_sizes[2], layer_sizes[1]))]
         # self.b = [np.zeros((layer_sizes[1], 1)),
         #           np.zeros((layer_sizes[2], 1))]
-        self.b = [np.random.standard_normal(size=(layer_sizes[1], 1)),
-                  np.random.standard_normal(size=(layer_sizes[2], 1))]
+        self.b = [np.random.uniform(-1, 1, size=(layer_sizes[1], 1)),
+                  np.random.uniform(-1, 1, size=(layer_sizes[2], 1))]
         self.a = [np.zeros((layer_sizes[1], 1)),
                   np.zeros((layer_sizes[2], 1))]
         self.z = [np.zeros((layer_sizes[1], 1)),
@@ -28,7 +28,6 @@ class NeuralNetwork():
         return x
 
     def forward(self, x):
-
         # TODO
         # x example: np.array([[0.1], [0.2], [0.3]])
         self.z[0] = np.add(np.matmul(self.w[0], x), self.b[0])

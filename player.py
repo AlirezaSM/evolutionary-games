@@ -92,7 +92,7 @@ class Player():
         if mode == 'gravity':
             layer_sizes = [6, 20, 1]
         elif mode == 'helicopter':
-            layer_sizes = [10, 20, 1]
+            layer_sizes = [9, 20, 2]
         elif mode == 'thrust':
             layer_sizes = [6, 20, 1]
         return layer_sizes
@@ -105,21 +105,19 @@ class Player():
         # box_lists: an array of `BoxList` objects
         # agent_position example: [600, 250]
         # velocity example: 7
-
-        x = np.zeros((10, 1))
-        insert_index = 0
-        for box in box_lists:
-            x[insert_index] = (box.x - agent_position[0]) / CONFIG["WIDTH"]
-            x[insert_index + 1] = (box.gap_mid - agent_position[1]) / CONFIG["HEIGHT"]
-            insert_index += 2
         if mode == 'helicopter':
-            x[6] = 1 / 3 # We have 3 mode
-        x[7] = agent_position[0] / CONFIG["WIDTH"]
-        x[8] = agent_position[1] / CONFIG["HEIGHT"]
-        x[9] = velocity / 100 # Maximum velocity = 100
+            x = np.zeros((9, 1))
+            insert_index = 0
+            for box in box_lists:
+                x[insert_index] = (box.x - agent_position[0]) / CONFIG["WIDTH"]
+                x[insert_index + 1] = (box.gap_mid - agent_position[1]) / CONFIG["HEIGHT"]
+                insert_index += 2
+            x[6] = agent_position[0] / CONFIG["WIDTH"]
+            x[7] = agent_position[1] / CONFIG["HEIGHT"]
+            x[8] = velocity / 100  # Maximum velocity = 100
 
         nn_output = self.nn.forward(x)
-        if nn_output >= 0.5:
+        if nn_output[0] > nn_output[1]:
             direction = 1
         else:
             direction = -1

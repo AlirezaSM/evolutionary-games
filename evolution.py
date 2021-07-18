@@ -18,6 +18,31 @@ class Evolution():
 
         # TODO
         # child: an object of class `Player`
+        pm = 0.05
+        mean = 0
+        variance = 0.01
+        for w in child.nn.w:
+            num_rows, num_cols = w.shape
+            for x in range(num_rows):
+                for y in range(num_cols):
+                    if np.random.uniform(0, 1, 1) < pm:
+                        w[x, y] += np.random.normal(mean, variance, 1)
+                        if w[x, y] > 1:
+                            w[x, y] = 1
+                        elif w[x, y] < -1:
+                            w[x, y] = -1
+
+        for b in child.nn.b:
+            num_rows, num_cols = b.shape
+            for x in range(num_rows):
+                for y in range(num_cols):
+                    if np.random.uniform(0, 1, 1) < pm:
+                        b[x, y] += np.random.normal(mean, variance, 1)
+                        if b[x, y] > 1:
+                            b[x, y] = 1
+                        elif b[x, y] < -1:
+                            b[x, y] = -1
+
         pass
 
 
@@ -34,17 +59,30 @@ class Evolution():
             # prev_players: an array of `Player` objects
 
             # parent selection with roulette wheel approach
+            # total_fitness = sum(p.fitness for p in prev_players)
+            # uniform_rnd_numb = sorted(np.random.uniform(0, 1, num_players))
+            # index = 0
+            # current = 0
+            # new_players = []
+            # for p in prev_players:
+            #     current += p.fitness / total_fitness
+            #     while index < num_players and current > uniform_rnd_numb[index]:
+            #         # create new child from selected parent
+            #         new_players.append(copy(p))
+            #         index += 1
+
+            # parent selection with SUS approach
             total_fitness = sum(p.fitness for p in prev_players)
-            uniform_rnd_numb = sorted(np.random.uniform(0, 1, num_players))
-            index = 0
+            rnd_num = np.random.rand() / num_players
+            step = 0
             current = 0
             new_players = []
             for p in prev_players:
                 current += p.fitness / total_fitness
-                while index < num_players and current > uniform_rnd_numb[index]:
-                    # create new child from selected parent
+                while current > rnd_num and step < num_players:
                     new_players.append(copy(p))
-                    index += 1
+                    step += 1
+                    rnd_num += 1 / num_players
 
             for child in new_players:
                 self.mutate(child)
