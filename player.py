@@ -92,7 +92,7 @@ class Player():
         if mode == 'gravity':
             layer_sizes = [6, 20, 1]
         elif mode == 'helicopter':
-            layer_sizes = [9, 20, 2]
+            layer_sizes = [8, 20, 1]
         elif mode == 'thrust':
             layer_sizes = [6, 20, 1]
         return layer_sizes
@@ -105,23 +105,35 @@ class Player():
         # box_lists: an array of `BoxList` objects
         # agent_position example: [600, 250]
         # velocity example: 7
+
+        # if mode == 'helicopter':
+        #     x = np.zeros((2, 1))
+        #     if len(box_lists) == 0:
+        #         x[0] = 0.5
+        #     else:
+        #         x[0] = (box_lists[0].gap_mid - agent_position[1]) / CONFIG["HEIGHT"]
+        #     x[1] = velocity / 100  # Maximum velocity = 100
+
         if mode == 'helicopter':
-            x = np.zeros((9, 1))
+            x = np.zeros((8, 1))
             insert_index = 0
-            for box in box_lists:
-                x[insert_index] = (box.x - agent_position[0]) / CONFIG["WIDTH"]
-                x[insert_index + 1] = (box.gap_mid - agent_position[1]) / CONFIG["HEIGHT"]
-                insert_index += 2
-            x[6] = agent_position[0] / CONFIG["WIDTH"]
-            x[7] = agent_position[1] / CONFIG["HEIGHT"]
-            x[8] = velocity / 100  # Maximum velocity = 100
+            for i in range(3):
+                if i < len(box_lists):
+                    x[insert_index] = (box_lists[i].x - agent_position[0]) / CONFIG["WIDTH"]
+                    x[insert_index + 1] = (box_lists[i].gap_mid) / CONFIG["HEIGHT"]
+                    insert_index += 2
+                else:
+                    x[insert_index] = 1
+                    x[insert_index + 1] = 0.5
+                    insert_index += 2
+            x[6] = agent_position[1] / CONFIG["HEIGHT"]
+            x[7] = velocity / 20  # Maximum velocity = 100
 
         nn_output = self.nn.forward(x)
-        if nn_output[0] > nn_output[1]:
+        if nn_output >= 0.5:
             direction = 1
         else:
             direction = -1
-        # direction = -1
         return direction
 
     def collision_detection(self, mode, box_lists, camera):

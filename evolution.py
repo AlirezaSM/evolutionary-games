@@ -18,41 +18,15 @@ class Evolution():
 
         # TODO
         # child: an object of class `Player`
-        pm = 0.05
+        pm = 0.4
         mean = 0
-        variance = 0.01
-        # for w in child.nn.w:
-        #     num_rows, num_cols = w.shape
-        #     rnd_probs = np.random.uniform(0, 1, size=(num_rows, num_cols))
-        #     gaussian_noises = np.random.normal(mean, variance, size=(num_rows, num_cols))
-        #     for x in range(num_rows):
-        #         for y in range(num_cols):
-        #             if rnd_probs[x, y] < pm:
-        #                 gaussian_noises[x, y] = 0
-        #     w = np.add(w, gaussian_noises)
-        #
-        # for b in child.nn.b:
-        #     num_rows, num_cols = b.shape
-        #     rnd_probs = np.random.uniform(0, 1, size=(num_rows, num_cols))
-        #     gaussian_noises = np.random.normal(mean, variance, size=(num_rows, num_cols))
-        #     for x in range(num_rows):
-        #         for y in range(num_cols):
-        #             if rnd_probs[x, y] < pm:
-        #                 gaussian_noises[x, y] = 0
-        #     b = np.add(b, gaussian_noises)
-
-
-
+        variance = 0.4
         for w in child.nn.w:
             num_rows, num_cols = w.shape
             for x in range(num_rows):
                 for y in range(num_cols):
                     if np.random.uniform(0, 1, 1) < pm:
                         w[x, y] += np.random.normal(mean, variance, 1)
-                        if w[x, y] > 1:
-                            w[x, y] = 1
-                        elif w[x, y] < -1:
-                            w[x, y] = -1
 
         for b in child.nn.b:
             num_rows, num_cols = b.shape
@@ -60,13 +34,8 @@ class Evolution():
                 for y in range(num_cols):
                     if np.random.uniform(0, 1, 1) < pm:
                         b[x, y] += np.random.normal(mean, variance, 1)
-                        if b[x, y] > 1:
-                            b[x, y] = 1
-                        elif b[x, y] < -1:
-                            b[x, y] = -1
 
         pass
-
 
     def generate_new_population(self, num_players, prev_players=None):
 
@@ -80,7 +49,7 @@ class Evolution():
             # num_players example: 150
             # prev_players: an array of `Player` objects
 
-            # parent selection with roulette wheel approach
+            # #parent selection with roulette wheel approach
             # total_fitness = sum(p.fitness for p in prev_players)
             # uniform_rnd_numb = sorted(np.random.uniform(0, 1, num_players))
             # index = 0
@@ -90,8 +59,9 @@ class Evolution():
             #     current += p.fitness / total_fitness
             #     while index < num_players and current > uniform_rnd_numb[index]:
             #         # create new child from selected parent
-            #         new_players.append(copy(p))
+            #         new_players.append(deepcopy(p))
             #         index += 1
+
 
             # parent selection with SUS approach
             total_fitness = sum(p.fitness for p in prev_players)
@@ -124,5 +94,4 @@ class Evolution():
 
         # TODO (additional): a selection method other than `top-k`
         # TODO (additional): plotting
-
         return players[: num_players]
