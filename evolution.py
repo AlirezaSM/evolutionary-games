@@ -12,15 +12,15 @@ class Evolution():
     # calculate fitness of players
     def calculate_fitness(self, players, delta_xs):
         for i, p in enumerate(players):
-            p.fitness = delta_xs[i]
+            p.fitness = delta_xs[i] ** 3
 
     def mutate(self, child):
 
         # TODO
         # child: an object of class `Player`
-        pm = 0.4
+        pm = 0.2
         mean = 0
-        variance = 0.4
+        variance = 0.6
         for w in child.nn.w:
             num_rows, num_cols = w.shape
             for x in range(num_rows):
@@ -34,8 +34,6 @@ class Evolution():
                 for y in range(num_cols):
                     if np.random.uniform(0, 1, 1) < pm:
                         b[x, y] += np.random.normal(mean, variance, 1)
-
-        pass
 
     def generate_new_population(self, num_players, prev_players=None):
 

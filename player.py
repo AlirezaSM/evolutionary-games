@@ -87,17 +87,15 @@ class Player():
     def init_network(self, mode):
 
         # you can change the parameters below
-
         layer_sizes = None
         if mode == 'gravity':
-            layer_sizes = [6, 20, 1]
+            layer_sizes = [8, 20, 1]
         elif mode == 'helicopter':
             layer_sizes = [8, 20, 1]
         elif mode == 'thrust':
-            layer_sizes = [6, 20, 1]
+            layer_sizes = [8, 128, 3]
         return layer_sizes
 
-    
     def think(self, mode, box_lists, agent_position, velocity):
 
         # TODO
@@ -107,7 +105,7 @@ class Player():
         # velocity example: 7
 
         # if mode == 'helicopter':
-        #     x = np.zeros((2, 1))
+        #     x = np.zeroks((2, 1))
         #     if len(box_lists) == 0:
         #         x[0] = 0.5
         #     else:
@@ -129,11 +127,59 @@ class Player():
             x[6] = agent_position[1] / CONFIG["HEIGHT"]
             x[7] = velocity / 20  # Maximum velocity = 100
 
-        nn_output = self.nn.forward(x)
-        if nn_output >= 0.5:
-            direction = 1
-        else:
-            direction = -1
+            nn_output = self.nn.forward(x)
+            if nn_output >= 0.5:
+                direction = 1
+            else:
+                direction = -1
+
+        if mode == 'gravity':
+            x = np.zeros((8, 1))
+            insert_index = 0
+            for i in range(3):
+                if i < len(box_lists):
+                    x[insert_index] = (box_lists[i].x - agent_position[0]) / CONFIG["WIDTH"]
+                    x[insert_index + 1] = (box_lists[i].gap_mid) / CONFIG["HEIGHT"]
+                    insert_index += 2
+                else:
+                    x[insert_index] = 1
+                    x[insert_index + 1] = 0.5
+                    insert_index += 2
+            x[6] = agent_position[1] / CONFIG["HEIGHT"]
+            x[7] = velocity / 20  # Maximum velocity = 100
+
+            nn_output = self.nn.forward(x)
+            if nn_output >= 0.5:
+                direction = 1
+            else:
+                direction = -1
+
+        if mode == 'thrust':
+            x = np.zeros((8, 1))
+            insert_index = 0
+            for i in range(3):
+                if i < len(box_lists):
+                    x[insert_index] = (box_lists[i].x - agent_position[0]) / CONFIG["WIDTH"]
+                    x[insert_index + 1] = (box_lists[i].gap_mid) / CONFIG["HEIGHT"]
+                    insert_index += 2
+                else:
+                    x[insert_index] = 1
+                    x[insert_index + 1] = 0.5
+                    insert_index += 2
+            x[6] = agent_position[1] / CONFIG["HEIGHT"]
+            x[7] = velocity / 20  # Maximum velocity = 100
+
+            print(x)
+            nn_output = self.nn.forward(x)
+            max_output = np.argmax(nn_output)
+
+            if max_output == 0:
+                direction = 1
+            elif max_output == 1:
+                direction = 0
+            else:
+                direction = -1
+
         return direction
 
     def collision_detection(self, mode, box_lists, camera):
