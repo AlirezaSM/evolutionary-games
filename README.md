@@ -10,6 +10,11 @@ You can play these games by executing the following command. For changing the mo
 python game.py --mode *MODE_NAME* --play True
 ```
 
+## Game Modes
+Helicopter             |  Gravity          |  Thrust
+:-------------------------:|:-------------------------:|:-------------------------:
+![Helicopter](/screenshots/helicopter.png?raw=true)  |  ![Gravity](/screenshots/gravity.png?raw=true) | ![Thrust](/screenshots/thrust.png?raw=true)
+Hold `Space` for acceleration | Press `Space` for changing the gravity direction | Use `Up` and `Down` arrow keys to move
 
 ## Learning
 The agent learns via a neural network and evolution algorithm. You can watch the process of learning and behavior of the population of agents by executing the following command.
@@ -33,11 +38,6 @@ For example:
 python game.py --mode helicopter -checkpoint checkpoint/helicopter/5
 ```
 
-
-## Game Modes
-Helicopter             |  Gravity          |  Thrust
-:-------------------------:|:-------------------------:|:-------------------------:
-![Helicopter](/screenshots/helicopter.png?raw=true)  |  ![Gravity](/screenshots/gravity.png?raw=true) | ![Thrust](/screenshots/thrust.png?raw=true)
 
 ## Contributors
 - [Hossein Zaredar](https://github.com/HosseinZaredar)
